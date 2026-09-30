@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Финансовое управление HR Hub - демонстрационный кейс</title>
+
+<style>
+:root{
+  --bg:#07090d;
+  --bg2:#0b0f14;
+  --panel:#0f141b;
+  --panel2:#121922;
+  --text:#ecfff8;
+  --muted:#9f93b5;
+  --line:#2a1f45;
+  --accent:#8b5cf6;
+  --accent2:#35f5ff;
+  --danger:#ff5577;
+  --warn:#ffd166;
+  --shadow:0 0 24px rgba(139,92,246,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  color:var(--text);
+  font:14px/1.45 Inter,Segoe UI,Arial,sans-serif;
+  background:
+    radial-gradient(circle at 18% 0%,rgba(139,92,246,.10),transparent 28%),
+    radial-gradient(circle at 88% 12%,rgba(53,245,255,.08),transparent 24%),
+    linear-gradient(180deg,#06080b 0%,#090d12 100%);
+  min-height:100vh;
+}
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    linear-gradient(rgba(139,92,246,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(139,92,246,.025) 1px,transparent 1px);
+  background-size:34px 34px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.45),transparent 85%);
+}
+.wrap{max-width:1480px;margin:0 auto;padding:26px;position:relative}
+.top{
+  display:flex;
+  justify-content:space-between;
+  gap:18px;
+  align-items:flex-start;
+  margin-bottom:18px;
+  padding:22px;
+  border:1px solid rgba(139,92,246,.22);
+  border-radius:18px;
+  background:linear-gradient(180deg,rgba(15,20,27,.96),rgba(9,13,18,.94));
+  box-shadow:var(--shadow), inset 0 0 25px rgba(139,92,246,.025);
+}
+h1{
+  font-size:30px;
+  line-height:1.1;
+  margin:0 0 8px;
+  letter-spacing:-.02em;
+  text-shadow:0 0 18px rgba(139,92,246,.18);
+}
+.sub{color:var(--muted);max-width:850px}
+.badge{
+  padding:8px 12px;
+  border:1px solid rgba(53,245,255,.35);
+  border-radius:999px;
+  color:#e9d5ff;
+  background:rgba(53,245,255,.04);
+  box-shadow:0 0 18px rgba(53,245,255,.08);
+  white-space:nowrap;
+}
+.tabs{display:flex;gap:9px;flex-wrap:wrap;margin:18px 0}
+.tab{
+  border:1px solid #35264f;
+  background:linear-gradient(180deg,#10161e,#0b1016);
+  color:#9cb4ac;
+  padding:10px 15px;
+  border-radius:11px;
+  cursor:pointer;
+  transition:.2s ease;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.01);
+}
+.tab:hover{
+  color:#f5f3ff;
+  border-color:rgba(139,92,246,.45);
+  box-shadow:0 0 18px rgba(139,92,246,.10);
+  transform:translateY(-1px);
+}
+.tab.active{
+  color:#0d0716;
+  border-color:var(--accent);
+  background:linear-gradient(135deg,var(--accent),#b794f6);
+  box-shadow:0 0 22px rgba(139,92,246,.30);
+  font-weight:700;
+}
+.section{display:none}.section.active{display:block}
+.grid{display:grid;gap:14px}
+.kpis{grid-template-columns:repeat(6,1fr)}
+.card{
+  background:
+    linear-gradient(180deg,rgba(16,22,30,.98),rgba(10,14,20,.98));
+  border:1px solid rgba(139,92,246,.18);
+  border-radius:16px;
+  padding:16px;
+  box-shadow:0 10px 35px rgba(0,0,0,.22), inset 0 0 28px rgba(139,92,246,.018);
+  position:relative;
+  overflow:hidden;
+}
+.card:before{
+  content:"";
+  position:absolute;
+  left:0;top:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(139,92,246,.55),transparent);
+  opacity:.65;
+}
+.card:hover{
+  border-color:rgba(139,92,246,.35);
+  box-shadow:0 0 24px rgba(139,92,246,.07),0 12px 35px rgba(0,0,0,.28);
+}
+.kpi .label{
+  color:#9f93b5;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+.kpi .value{
+  font-size:24px;
+  font-weight:800;
+  margin-top:7px;
+  color:#f3fff9;
+}
+.delta{font-size:12px;margin-top:5px}
+.pos{color:#c4b5fd}.neg{color:#ff6b89}.warn{color:#ffd166}
+.two{grid-template-columns:1.4fr 1fr}.three{grid-template-columns:repeat(3,1fr)}
+h2{
+  font-size:17px;
+  margin:0 0 13px;
+  color:#effff9;
+  letter-spacing:.01em;
+}
+h3{
+  font-size:13px;
+  margin:0 0 10px;
+  color:#d2c5e8;
+  text-transform:uppercase;
+  letter-spacing:.07em;
+}
+table{width:100%;border-collapse:collapse}
+th,td{
+  padding:11px 9px;
+  border-bottom:1px solid rgba(139,92,246,.10);
+  text-align:right;
+}
+th:first-child,td:first-child{text-align:left}
+th{
+  color:#a99bc1;
+  font-weight:700;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  background:rgba(139,92,246,.018);
+}
+tbody tr:hover td{background:rgba(139,92,246,.025)}
+.bar{
+  height:8px;
+  background:#111d1a;
+  border:1px solid rgba(139,92,246,.10);
+  border-radius:999px;
+  overflow:hidden
+}
+.fill{
+  height:100%;
+  background:linear-gradient(90deg,#7c3aed,var(--accent),var(--accent2));
+  box-shadow:0 0 14px rgba(139,92,246,.35);
+}
+.row{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:10px 0}
+.controls{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.control{
+  background:linear-gradient(180deg,#101720,#0b1017);
+  border:1px solid rgba(53,245,255,.17);
+  border-radius:14px;
+  padding:14px;
+  box-shadow:inset 0 0 20px rgba(53,245,255,.018);
+}
+input[type=range]{
+  width:100%;
+  accent-color:var(--accent);
+}
+small{color:var(--muted)}
+.chart{
+  display:flex;
+  align-items:flex-end;
+  gap:8px;
+  height:220px;
+  padding-top:16px;
+  border-bottom:1px solid rgba(139,92,246,.09);
+}
+.col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.col .b{
+  width:70%;
+  background:linear-gradient(180deg,var(--accent2),var(--accent) 55%,#5b21b6);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:7px 7px 2px 2px;
+  min-height:4px;
+  box-shadow:0 0 14px rgba(139,92,246,.18);
+}
+.col span{font-size:11px;color:var(--muted)}
+.legend{display:flex;gap:14px;color:var(--muted);font-size:12px}
+.pill{
+  display:inline-block;
+  padding:5px 8px;
+  border-radius:999px;
+  background:#171022;
+  color:#ddd6fe;
+  border:1px solid rgba(139,92,246,.16);
+  font-size:11px
+}
+.callout{
+  border:1px solid rgba(139,92,246,.18);
+  border-left:3px solid var(--accent);
+  padding:13px 14px;
+  background:linear-gradient(90deg,rgba(139,92,246,.055),rgba(8,13,18,.8));
+  border-radius:10px;
+  color:#ece7f5;
+  box-shadow:inset 0 0 20px rgba(139,92,246,.025);
+}
+.footer{
+  margin-top:18px;
+  color:#837792;
+  font-size:12px;
+  padding:14px 2px 4px;
+}
+::selection{background:rgba(139,92,246,.22);color:#fff}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:#080b0f}
+::-webkit-scrollbar-thumb{background:#2e1f4f;border-radius:10px}
+::-webkit-scrollbar-thumb:hover{background:#4c2f7a}
+@media(max-width:1100px){
+  .kpis{grid-template-columns:repeat(3,1fr)}
+  .two,.three,.controls{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+  .kpis{grid-template-columns:1fr 1fr}
+  .wrap{padding:14px}
+  .top{flex-direction:column;padding:17px}
+  h1{font-size:24px}
+}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <h1>Финансовое управление HR Hub</h1>
+      <div class="sub">Демонстрационный финансовый кейс для роли финансового бизнес-партнера. Все цифры ниже условные и используются только для демонстрации логики управления HR Hub.</div>
+    </div>
+    <div class="badge">Демо-кейс · синтетические данные</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-id="overview">Обзор</button>
+    <button class="tab" data-id="pnl">P&L</button>
+    <button class="tab" data-id="planfact">План-факт</button>
+    <button class="tab" data-id="allocation">Модель распределения</button>
+    <button class="tab" data-id="прогноз">Прогноз</button>
+  </div>
+
+  <section id="overview" class="section active">
+    <div class="grid kpis">
+      <div class="card kpi"><div class="label">Расходы HR Hub с начала года</div><div class="value">184,6 млн ₽</div><div class="delta neg">+7,8% к бюджету</div></div>
+      <div class="card kpi"><div class="label">Внутренние начисления</div><div class="value">146,2 млн ₽</div><div class="delta pos">79,2% покрытия затрат</div></div>
+      <div class="card kpi"><div class="label">Численность</div><div class="value">1 248</div><div class="delta">+6,4% с начала года</div></div>
+      <div class="card kpi"><div class="label">Расходы HR на сотрудника</div><div class="value">18,5 тыс ₽</div><div class="delta neg">+5,1% к плану</div></div>
+      <div class="card kpi"><div class="label">Стоимость найма</div><div class="value">126 тыс ₽</div><div class="delta pos">-8,7% г/г</div></div>
+      <div class="card kpi"><div class="label">Прогноз до конца года</div><div class="value">252,4 млн ₽</div><div class="delta warn">+14,4 млн ₽ к бюджету</div></div>
+    </div>
+
+    <div class="grid two" style="margin-top:14px">
+      <div class="card">
+        <h2>Динамика расходов HR Hub</h2>
+        <div class="chart" id="overviewChart"></div>
+      </div>
+      <div class="card">
+        <h2>Ключевые драйверы отклонения</h2>
+        <div class="row"><span>Рост численности</span><b>+6,2 млн ₽</b></div>
+        <div class="bar"><div class="fill" style="width:78%"></div></div>
+        <div class="row"><span>Внешние агентства по подбору</span><b>+3,8 млн ₽</b></div>
+        <div class="bar"><div class="fill" style="width:48%"></div></div>
+        <div class="row"><span>Индексация зарплат</span><b>+2,6 млн ₽</b></div>
+        <div class="bar"><div class="fill" style="width:33%"></div></div>
+        <div class="row"><span>HR-системы и технологии</span><b>+1,8 млн ₽</b></div>
+        <div class="bar"><div class="fill" style="width:23%"></div></div>
+        <div class="callout" style="margin-top:16px">Фокус FBP: не только зафиксировать перерасход, а разделить его на эффект объема, цены и структуры и предложить корректирующие действия.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pnl" class="section">
+    <div class="card">
+      <h2>P&L HR Hub</h2>
+      <table>
+        <thead><tr><th>Статья</th><th>Бюджет с начала года</th><th>Факт с начала года</th><th>Отклонение</th><th>Отклонение, %</th></tr></thead>
+        <tbody>
+          <tr><td>Внутренние начисления за услуги</td><td>142,0</td><td>146,2</td><td class="pos">+4,2</td><td class="pos">+3,0%</td></tr>
+          <tr><td>Расходы на персонал</td><td>91,0</td><td>98,4</td><td class="neg">+7,4</td><td class="neg">+8,1%</td></tr>
+          <tr><td>Подбор персонала</td><td>24,0</td><td>27,8</td><td class="neg">+3,8</td><td class="neg">+15,8%</td></tr>
+          <tr><td>HR-системы и технологии</td><td>18,5</td><td>20,3</td><td class="neg">+1,8</td><td class="neg">+9,7%</td></tr>
+          <tr><td>Обучение и развитие</td><td>12,8</td><td>11,9</td><td class="pos">-0,9</td><td class="pos">-7,0%</td></tr>
+          <tr><td>Льготы и компенсации</td><td>10,6</td><td>11,2</td><td class="neg">+0,6</td><td class="neg">+5,7%</td></tr>
+          <tr><td>Подрядчики</td><td>8,4</td><td>9,7</td><td class="neg">+1,3</td><td class="neg">+15,5%</td></tr>
+          <tr><td>Мероприятия и прочие расходы</td><td>5,9</td><td>5,3</td><td class="pos">-0,6</td><td class="pos">-10,2%</td></tr>
+          <tr><td><b>Итого расходы HR Hub</b></td><td><b>171,2</b></td><td><b>184,6</b></td><td class="neg"><b>+13,4</b></td><td class="neg"><b>+7,8%</b></td></tr>
+          <tr><td><b>Чистый внутренний результат</b></td><td><b>-29,2</b></td><td><b>-38,4</b></td><td class="neg"><b>-9,2</b></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="planfact" class="section">
+    <div class="grid three">
+      <div class="card"><h3>Эффект объема</h3><div class="value" style="font-size:28px;font-weight:700">+6,2 млн ₽</div><small>в основном рост численности и найма</small></div>
+      <div class="card"><h3>Ценовой эффект</h3><div class="value" style="font-size:28px;font-weight:700">+4,1 млн ₽</div><small>зарплаты, агентства, лицензии</small></div>
+      <div class="card"><h3>Эффект структуры / периода</h3><div class="value" style="font-size:28px;font-weight:700">+3,1 млн ₽</div><small>сдвиги проектов и распределение расходов</small></div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h2>План-факт по ключевым статьям</h2>
+      <table>
+        <thead><tr><th>Статья</th><th>Бюджет</th><th>Факт</th><th>Основная причина</th><th>Действие финансового бизнес-партнера</th></tr></thead>
+        <tbody>
+          <tr><td>Персонал</td><td>91,0</td><td>98,4</td><td style="text-align:left">ускоренный найм + индексация</td><td style="text-align:left">пересмотреть план найма и текущий темп расходов</td></tr>
+          <tr><td>Подбор персонала</td><td>24,0</td><td>27,8</td><td style="text-align:left">больше внешних агентств</td><td style="text-align:left">лимиты и юнит-экономика по каналам</td></tr>
+          <tr><td>HR-системы и технологии</td><td>18,5</td><td>20,3</td><td style="text-align:left">новые лицензии HR-систем</td><td style="text-align:left">пересчитать использование лицензий и стоимость на пользователя</td></tr>
+          <tr><td>Обучение и развитие</td><td>12,8</td><td>11,9</td><td style="text-align:left">часть программ перенесена</td><td style="text-align:left">перенести в прогноз и не считать экономией</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="allocation" class="section">
+    <div class="grid two">
+      <div class="card">
+        <h2>Модель распределения затрат</h2>
+        <table>
+          <thead><tr><th>Сервис</th><th>Драйвер</th><th>Логика</th></tr></thead>
+          <tbody>
+            <tr><td>Подбор персонала</td><td>закрытые вакансии</td><td style="text-align:left">стоимость по факту потребления</td></tr>
+            <tr><td>HR-администрирование</td><td>численность</td><td style="text-align:left">равномерно на сотрудника</td></tr>
+            <tr><td>Обучение и развитие</td><td>участники</td><td style="text-align:left">по фактическому числу участников</td></tr>
+            <tr><td>HR-системы и технологии</td><td>активные пользователи</td><td style="text-align:left">по лицензиям / пользователям</td></tr>
+            <tr><td>HR-бизнес-партнеры</td><td>штатные единицы / часы</td><td style="text-align:left">по объему сопровождения</td></tr>
+            <tr><td>Корпоративный HR</td><td>численность</td><td style="text-align:left">общекорпоративные расходы</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h2>Покрытие затрат внутренними начислениями</h2>
+        <div class="row"><span>Игровое направление</span><b>54,0 млн ₽</b></div>
+        <div class="row"><span>Платформа / Технологии</span><b>36,8 млн ₽</b></div>
+        <div class="row"><span>Коммерческий блок</span><b>24,1 млн ₽</b></div>
+        <div class="row"><span>Корпоративные функции</span><b>31,3 млн ₽</b></div>
+        <div class="bar"><div class="fill" style="width:79.2%"></div></div>
+        <div class="row"><span>Доля покрытия затрат</span><b>79,2%</b></div>
+        <div class="callout">Управленческий вопрос: какие сервисы следует полностью распределять на внутренние подразделения, а какие оставлять в составе общекорпоративных расходов. Это определяет экономику внутренних клиентов и корректность P&L.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="прогноз" class="section">
+    <div class="controls">
+      <div class="control">
+        <div class="row"><span>План найма</span><b id="hireVal">100%</b></div>
+        <input id="hire" type="range" min="70" max="130" value="100">
+        <small>70-130% от базового плана</small>
+      </div>
+      <div class="control">
+        <div class="row"><span>Индексация зарплат</span><b id="salaryVal">8%</b></div>
+        <input id="salary" type="range" min="0" max="15" value="8">
+        <small>индексация фонда оплаты труда</small>
+      </div>
+      <div class="control">
+        <div class="row"><span>Подрядчики</span><b id="contractVal">100%</b></div>
+        <input id="contract" type="range" min="50" max="120" value="100">
+        <small>уровень внешних подрядчиков</small>
+      </div>
+    </div>
+    <div class="grid three" style="margin-top:14px">
+      <div class="card kpi"><div class="label">Прогноз до конца года</div><div id="прогнозTotal" class="value">252,4 млн ₽</div></div>
+      <div class="card kpi"><div class="label">Отклонение от бюджета</div><div id="прогнозVar" class="value">+14,4 млн ₽</div></div>
+      <div class="card kpi"><div class="label">Доля покрытия затрат</div><div id="recovery" class="value">79,2%</div></div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h2>Сценарный вывод</h2>
+      <div id="scenarioText" class="callout">Базовый сценарий: перерасход формируется в основном из-за роста численности, индексации и стоимости внешнего найма.</div>
+    </div>
+  </section>
+
+  <div class="footer">Кейс демонстрационный. Названия бизнес-юнитов и показатели синтетические. Цель - показать логику финансового бизнес-партнера: P&L, драйверы затрат, внутреннее распределение расходов, прогноз и управленческие действия.</div>
+</div>
+
+<script>
+const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep'];
+const vals=[16.2,17.4,18.1,19.3,19.9,20.8,22.1,24.0,26.8];
+const chart=document.getElementById('overviewChart');
+vals.forEach((v,i)=>{
+  const c=document.createElement('div'); c.className='col';
+  const b=document.createElement('div'); b.className='b'; b.style.height=(v/30*180)+'px'; b.title=v+' млн ₽';
+  const s=document.createElement('span'); s.textContent=months[i];
+  c.appendChild(b); c.appendChild(s); chart.appendChild(c);
+});
+document.querySelectorAll('.tab').forEach(btn=>btn.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
+  btn.classList.add('active'); document.getElementById(btn.dataset.id).classList.add('active');
+});
+const hire=document.getElementById('hire'), salary=document.getElementById('salary'), contract=document.getElementById('contract');
+function recalc(){
+  const h=+hire.value, s=+salary.value, c=+contract.value;
+  hireVal.textContent=h+'%'; salaryVal.textContent=s+'%'; contractVal.textContent=c+'%';
+  const base=238.0;
+  const impact=(h-100)*0.23 + (s-5)*1.15 + (c-100)*0.08 + 8.0;
+  const total=base+impact;
+  const variance=total-238.0;
+  const rec=Math.max(70, Math.min(90,79.2-(variance-14.4)*0.12));
+  прогнозTotal.textContent=total.toFixed(1).replace('.',',')+' млн ₽';
+  прогнозVar.textContent=(variance>=0?'+':'')+variance.toFixed(1).replace('.',',')+' млн ₽';
+  recovery.textContent=rec.toFixed(1).replace('.',',')+'%';
+  let txt='Сценарий: ';
+  if(h>110) txt+='ускоренный найм существенно увеличивает текущий темп расходов. ';
+  else if(h<90) txt+='снижение темпа найма заметно уменьшает текущий темп расходов. ';
+  else txt+='темп найма близок к базовому. ';
+  if(s>=10) txt+='Высокая индексация становится вторым ключевым драйвером затрат. ';
+  if(c<80) txt+='Снижение подрядчиков частично компенсирует рост постоянных расходов. ';
+  scenarioText.textContent=txt;
+}
+[hire,salary,contract].forEach(x=>x.addEventListener('input',recalc)); recalc();
+</script>
+</body>
+</html>
